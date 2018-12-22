@@ -39,8 +39,9 @@ class CorpusWordLengthFilter(CorpusBaseProcessor):
                         len(word) >= self._min and
                         len(word) <= self._max)
         filter_tokens = partial(filter, valid_length)
-        return map(filter_tokens, docs)
-    
+        filtered_docs = list(map(filter_tokens, docs))
+        filtered_docs = [list(f) for f in filtered_docs]
+        return filtered_docs
 
 porter_stemmer = PorterStemmer()
 
@@ -67,7 +68,7 @@ class CorpusStemmer(CorpusBaseProcessor):
         """
         assert isinstance(docs[0], list)
         stem_tokens = partial(map, self._stem_func)
-        return map(stem_tokens, docs)
+        return list(map(stem_tokens, docs))
 
 
 class CorpusPOSTagger(CorpusBaseProcessor):
@@ -92,4 +93,4 @@ class CorpusPOSTagger(CorpusBaseProcessor):
         list of list of str: the tagged corpus
         """
         assert isinstance(docs[0], list)
-        return map(self._pos_tag_func, docs)
+        return list(map(self._pos_tag_func, docs))
